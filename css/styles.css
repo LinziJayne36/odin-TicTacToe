@@ -3,6 +3,7 @@ html {
 }
 
 footer {
+    display: flex;
     background-color: black;
     color: whitesmoke;
 }
