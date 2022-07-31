@@ -1,16 +1,41 @@
 html, body {
     background-color: rgb(13, 5, 34);
-    height: 100%;
+    margin: 0;
+   
+}
+
+#mainWrapper {
+    display: flex;    
+    flex-direction: column;
+    min-height: 100vh;
+    background-color:rgb(245, 245, 245);
+    max-width: 50%;
+    margin: auto;
+      
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(236, 236, 236);
+    
+}
+
+main {
+    flex: 1;
+}
+
+#mainTitle {
+    color: rgb(13, 5, 34);
 }
 
 footer {
     display: flex;
-<<<<<<< Updated upstream
-    background-color: black;
-    color: whitesmoke;
-=======
+   background-color: rgb(236, 236, 236);
    color:rgb(14, 13, 13);
-   background-color: rgb(245, 245, 245);
    margin-top: auto;
->>>>>>> Stashed changes
+   justify-content: center;
+   padding-top: 1em;
+   padding-bottom: 1em;
 }
+
