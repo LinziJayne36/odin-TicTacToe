@@ -4,26 +4,44 @@
     //All other code goes below this line please!
 
     //This is the Gameboard module: all the UI stuff is in here for now
-    const Gameboard = (() => {
-        let _board = ["X", "O", "O", "X", "X", "O", "X", "O", "X"];
-        const _talkToMe = console.log(`Well, something is working at least. Here's what's inside board array: ${_board}`);
-        return {_talkToMe};
+    const gameBoard = (() => {
+        let board = ["X", "O", "O", "X", "X", "O", "X", "O", "X"];
+        let randomPhrase = "One in the hand's worth two in the bush";
+        const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
+
+        const createBoard = ( () => {
+            const numOfDivs = 3*3;
+            const gridContainer = document.getElementById('gbGridContainer');
+            function createDivs() {
+                const jsDivs = document.createElement('div');
+                gridContainer.appendChild(jsDivs);
+                jsDivs.setAttribute('class', 'squares');
+            }
+            for (let i = 0; i < numOfDivs; i++) {
+                createDivs();
+            }
+        })
+        createBoard();
+        return {talkToMe, randomPhrase};
     })();//This is the end of the Gameboard module **************************************************************************
 
-    Gameboard._talkToMe;//--------------------------------testing------------------------------
+   // gameBoard.talkToMe(); //----------------------------TEST-----------------------------
 
 
     //This is the Game module: it will control the flow of the game
-    const Game = (() => {
-        let _whoseTurn = "player1";
-        return{_whoseTurn};
+    const game = (() => {
+        let whoseTurn = "player1";
+        gameBoard.talkToMe();//This is how you call functions that are returned from other modules
+        const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
+        console.log(gameBoard.randomPhrase);
+        return {sayTurn};
     })();//This is the end of the Game module *******************************************************************************
 
-    console.log(Game._whoseTurn);//--------------------------------testing------------------------------
-
+    game.sayTurn(); //----------------------------TEST-----------------------------------
+    
     //This is the player factory function
     const createPlayer = (playerName) => {
-        return {playerName}
+        return {playerName};
     }//This is the end of the createPlayer factory***************************************************************************
 
     

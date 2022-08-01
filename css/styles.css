@@ -1,6 +1,6 @@
 html, body {
     
-    background-image: linear-gradient(rgb(13, 5, 34), rgb(252, 252, 102), rgb(135, 135, 150));
+    background-image: linear-gradient(rgb(13, 5, 34), 80%, rgb(252, 252, 102));
     margin: 0;
    
 }
@@ -22,11 +22,35 @@ header {
 }
 
 main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: 1;
 }
 
 #mainTitle {
     color: rgb(13, 5, 34);
+    font-family: 'Staatliches', cursive;
+    font-size: 2rem;
+}
+
+#gbGridContainer {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 400px;
+    width: 400px;
+    border-right: solid;
+    border-bottom: solid;
+    border-color: darkred;
+    border-width: 0.5px;
+}
+
+.squares{
+    border-top: solid;
+    border-left: solid;
+    border-color: darkred;
+    border-width: 0.5px;
 }
 
 footer {
