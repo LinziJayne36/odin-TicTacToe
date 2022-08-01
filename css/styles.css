@@ -1,5 +1,6 @@
 html, body {
-    background-color: rgb(13, 5, 34);
+    
+    background-image: linear-gradient(rgb(13, 5, 34), rgb(252, 252, 102), rgb(135, 135, 150));
     margin: 0;
    
 }
@@ -11,7 +12,6 @@ html, body {
     background-color:rgb(245, 245, 245);
     max-width: 50%;
     margin: auto;
-      
 }
 
 header {
