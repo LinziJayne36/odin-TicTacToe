@@ -4,11 +4,14 @@
     //All other code goes below this line please!
 
     //This is the Gameboard module: all the UI stuff is in here for now
-    const gameBoard = (() => {
+    const gameBoard = (() => { //*****************************************************************************************
+
+
         let board = ["X", "O", "O", "X", "X", "O", "X", "O", "X"];
         let randomPhrase = "One in the hand's worth two in the bush";
         const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
 
+        //create & render the grid in the UI
         const createBoard = ( () => {
             const numOfDivs = 3*3;
             const gridContainer = document.getElementById('gbGridContainer');
@@ -22,7 +25,49 @@
             }
         })
         createBoard();
-        return {talkToMe, randomPhrase};
+
+        //create & insert the form for player names to be entered
+        const insertPlayerNameForm = ( () => {
+            const linebreak = document.createElement('br');
+            const formWrapper = document.createElement('div');
+            const main = document.getElementById('main');
+            main.appendChild(formWrapper);
+            formWrapper.setAttribute('class', 'formWrapper');
+            const playerXLabel = document.createElement('label');
+            playerXLabel.setAttribute('for', 'name');
+            playerXLabel.innerHTML = "Player X: ";
+            formWrapper.appendChild(playerXLabel);
+            const playerXInput = document.createElement('input');
+            playerXInput.setAttribute('id', 'name');
+            playerXInput.setAttribute('name', 'name');
+            playerXInput.setAttribute('type', 'text');
+            formWrapper.appendChild(playerXInput);
+
+            formWrapper.appendChild(linebreak.cloneNode());
+            formWrapper.appendChild(linebreak.cloneNode());
+
+            const playerOLabel = document.createElement('label');
+            playerOLabel.setAttribute('for', 'name');
+            playerOLabel.innerHTML = "Player O: ";
+            formWrapper.appendChild(playerOLabel);
+            const playerOInput = document.createElement('input');
+            playerOInput.setAttribute('id', 'name');
+            playerOInput.setAttribute('name', 'name');
+            playerOInput.setAttribute('type', 'text');
+            formWrapper.appendChild(playerOInput);
+
+            formWrapper.appendChild(linebreak.cloneNode());
+
+            const enterBtn = document.createElement('button');
+            enterBtn.setAttribute('type', 'button');
+            enterBtn.setAttribute('id', 'enterBtn');
+            enterBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
+            enterBtn.innerHTML = "ENTER";
+            formWrapper.appendChild(enterBtn);
+        });
+        insertPlayerNameForm();
+
+        return {insertPlayerNameForm, talkToMe, randomPhrase};
     })();//This is the end of the Gameboard module **************************************************************************
 
    // gameBoard.talkToMe(); //----------------------------TEST-----------------------------
