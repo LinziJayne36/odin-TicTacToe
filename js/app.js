@@ -3,6 +3,19 @@
     'use strict';
     //All other code goes below this line please!
 
+
+    //This is the factory func for creating player objects
+    const createPlayer = (playerName) => {
+        const playersName = playerName;
+        const selectPosition = () => {
+            console.log("for now we just say i can make a choice...")
+        }
+        return {playersName, selectPosition};
+    }
+
+    const playerXobj = createPlayer("Player X");
+    const playerOobj = createPlayer("Player O");
+
     //This is the Gameboard module: all the UI stuff is in here for now
     const gameBoard = (() => { //*****************************************************************************************
 
@@ -34,12 +47,12 @@
             main.appendChild(formWrapper);
             formWrapper.setAttribute('class', 'formWrapper');
             const playerXLabel = document.createElement('label');
-            playerXLabel.setAttribute('for', 'name');
+            playerXLabel.setAttribute('for', 'nameX');
             playerXLabel.innerHTML = "Player X: ";
             formWrapper.appendChild(playerXLabel);
             const playerXInput = document.createElement('input');
-            playerXInput.setAttribute('id', 'name');
-            playerXInput.setAttribute('name', 'name');
+            playerXInput.setAttribute('id', 'nameX');
+            playerXInput.setAttribute('name', 'nameX');
             playerXInput.setAttribute('type', 'text');
             formWrapper.appendChild(playerXInput);
 
@@ -47,12 +60,12 @@
             formWrapper.appendChild(linebreak.cloneNode());
 
             const playerOLabel = document.createElement('label');
-            playerOLabel.setAttribute('for', 'name');
+            playerOLabel.setAttribute('for', 'nameO');
             playerOLabel.innerHTML = "Player O: ";
             formWrapper.appendChild(playerOLabel);
             const playerOInput = document.createElement('input');
-            playerOInput.setAttribute('id', 'name');
-            playerOInput.setAttribute('name', 'name');
+            playerOInput.setAttribute('id', 'nameO');
+            playerOInput.setAttribute('name', 'nameO');
             playerOInput.setAttribute('type', 'text');
             formWrapper.appendChild(playerOInput);
 
@@ -64,6 +77,7 @@
             enterBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
             enterBtn.innerHTML = "ENTER";
             formWrapper.appendChild(enterBtn);
+            enterBtn.onclick = () => game.getPlayer(); //references the getPlayer function in game module that has been exposed
         });
         insertPlayerNameForm();
 
@@ -73,38 +87,30 @@
    // gameBoard.talkToMe(); //----------------------------TEST-----------------------------
 
 
-    //This is the Game module: it will control the flow of the game
+    //This is the Game module: it will control the flow of the game **********************************************************
     const game = (() => {
         let whoseTurn = "player1";
         gameBoard.talkToMe();//This is how you call functions that are returned from other modules
         const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
         console.log(gameBoard.randomPhrase);
-        return {sayTurn};
+        const getPlayer = () => {
+            //code to grab player names from form goes in here...
+            let playerXName = document.getElementById('nameX').value;
+            let playerOName = document.getElementById('nameO').value;
+            console.log(`Player X Name is: ${playerXName}`);
+            console.log(`Player O Name is: ${playerOName}`);
+            //This is better! We are updating the objects rather than creating them here...
+            playerOobj.playersName = playerOName;
+            playerXobj.playersName = playerXName;
+            console.log(`Did it work? If so, then player O is: ${playerOobj.playersName} and player X is: ${playerXobj.playersName} `);
+           
+        }
+
+        
+        return {getPlayer, sayTurn};
     })();//This is the end of the Game module *******************************************************************************
 
-    game.sayTurn(); //----------------------------TEST-----------------------------------
     
-    //This is the player factory function
-    const createPlayer = (playerName) => {
-        return {playerName};
-    }//This is the end of the createPlayer factory***************************************************************************
-
-    
-    //This is an example player object that's hardcoded for now for testing
-    const player1 = createPlayer("Linzi");//--------------------------------testing------------------------------
-
-    console.log(player1.playerName);//--------------------------------testing------------------------------
-
-    //This is a second example player object that's hardcoded for now for testing
-
-    const player2 = createPlayer("Zachary");//--------------------------------testing------------------------------
-    console.log(player2.playerName);//--------------------------------testing------------------------------
-
-
-
-
-
-
 
 
 }()) ;//This is the end of the enclosing anonyomus closure (wraps all the code)
