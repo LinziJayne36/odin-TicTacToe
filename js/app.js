@@ -38,7 +38,9 @@
         let board = ["X", "O", "O", "X", "X", "O", "X", "O", "X"];
         let randomPhrase = "One in the hand's worth two in the bush";
         const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
-
+        function sendBoard() {//making the board data available without exposing board variable
+            return board;
+        }
         //create & render the grid in the UI
         const boardGrid = ( () => {
             const numOfDivs = 3*3;
@@ -56,7 +58,7 @@
             }
         })
         boardGrid();//renders here rather than in display module to reduce coupling
-        return {talkToMe, randomPhrase, board};
+        return {talkToMe, randomPhrase, sendBoard};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
@@ -69,6 +71,7 @@
 
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
+    //console.log(gameBoard.sendBoard);//jut testing access to board module
     const insertPlayerNameForm = ( () => {
         const linebreak = document.createElement('br');
         const formWrapper = document.createElement('div');
