@@ -35,10 +35,10 @@
 
     //This is the Gameboard module: all the UI stuff is in here for now
     const gameBoard = (() => { //*****************************************************************************************
-        let board = ["X", "O", "O", "X", "X", "O", "X", "O", "X"];
+        let board = ["X", " ", " ", " ", " ", " ", " ", " ", " "];
         let randomPhrase = "One in the hand's worth two in the bush";
         const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
-        function sendBoard() {//making the board data available without exposing board variable
+        function accessBoard() {//making the board data available without exposing board variable
             return board;
         }
         //create & render the grid in the UI
@@ -58,7 +58,7 @@
             }
         })
         boardGrid();//renders here rather than in display module to reduce coupling
-        return {talkToMe, randomPhrase, sendBoard};
+        return {talkToMe, randomPhrase, accessBoard};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
@@ -71,7 +71,24 @@
 
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
-    //console.log(gameBoard.sendBoard);//jut testing access to board module
+    //console.log(gameBoard.accessBoard);//just testing access to gameBoard module
+    const writeMove = (marker, position) => {
+        let writeMarker = marker;//players marker...x or o
+        let writePosition = position;//id num of players chosen sq to mark
+        let writeBoard = gameBoard.accessBoard();
+        //let [sq0, sq1, sq2, sq3, sq4, sq5, sq6, sq7, sq8] = writeBoard;
+        //console.log(`sq3 says: ${sq3}`);
+        for (let i = 0; i < writeBoard.length; i++) {
+            let sqId = i;
+            console.log(sqId);
+            
+        }
+        
+        //let writeSq = document.getElementById('3');
+        writeSq.innerHTML = `${sq3}`;
+    }
+    //writeMove();
+
     const insertPlayerNameForm = ( () => {
         const linebreak = document.createElement('br');
         const formWrapper = document.createElement('div');
@@ -124,7 +141,10 @@
 
     //This is the Game module: it will control the flow of the game **********************************************************
     const game = (() => {
-        let whoseTurn = "player1";
+
+       
+
+        let whoseTurn = "X";//hardcoded for now
         gameBoard.talkToMe();//This is how you call functions that are returned from other modules
         const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
         console.log(gameBoard.randomPhrase);
@@ -140,6 +160,47 @@
             console.log(`Did it work? If so, then player O is: ${playerOobj.playersName} and player X is: ${playerXobj.playersName} `);
            
         }
+
+        const setMove = () => {
+            let currentPlayer = "X"; //hardcoded for now
+            let marker = "X"; //hardcoded for now
+            console.log(`The marker of the player whose turn it is: ${marker}`);
+            const positions = document.querySelectorAll('.squares');
+            console.log(positions);
+            positions.forEach((position) => {
+                position.addEventListener('click', (e) => {
+                    let playerSelected = position.id;
+                    console.log(`Is this the clicked elements id? : ${playerSelected}`);
+                    let checked = checkVacant(playerSelected);
+                    if (checked) {
+                        console.log("Yay, it's free");
+                        // call writeMove on display module...
+                        //display.writeMove(marker, playerSelected);
+                    } else {
+                        console.log("Nope, not free");
+                    }
+
+                });
+            });
+        }
+
+        setMove();
+
+        function checkVacant(sq) {
+            let isVacant;
+            //1. Access board array via gameBoard module's exposed accessBoard() 
+            let boardContents = gameBoard.accessBoard();
+            console.log(`boardContents successfully grabbed?...${boardContents}`);
+            if (boardContents[sq] == " ") {
+                isVacant = true;
+                return isVacant;
+            } else {
+                isVacant = false;
+                return isVacant;
+            }
+        }
+
+
         return {getPlayer, sayTurn};
     })();//This is the end of the Game module *******************************************************************************
 
