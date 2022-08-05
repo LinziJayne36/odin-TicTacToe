@@ -72,20 +72,33 @@
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
     //console.log(gameBoard.accessBoard);//just testing access to gameBoard module
+    const createStartBtn = () => {
+        const startBtnWrapper = document.getElementById('startBtnWrapper');
+        const startBtn = document.createElement('button');
+        startBtn.setAttribute('id', 'startBtn');
+        startBtn.setAttribute('type', 'button');
+        startBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
+        startBtn.innerHTML = "START";
+        startBtnWrapper.appendChild(startBtn);
+        //startBtn.onclick = () => game.startGame(); //references the getPlayer function in game module that has been exposed
+        startBtn.addEventListener('click', (e) => {
+            console.log("start btn got clicked");
+            game.startGame();
+        });
+
+    }
+    createStartBtn();
+
     const writeMove = (marker, position) => {
         let writeMarker = marker;//players marker...x or o
         let writePosition = position;//id num of players chosen sq to mark
-        let writeBoard = gameBoard.accessBoard();
+        //let writeBoard = gameBoard.accessBoard();
         //let [sq0, sq1, sq2, sq3, sq4, sq5, sq6, sq7, sq8] = writeBoard;
         //console.log(`sq3 says: ${sq3}`);
-        for (let i = 0; i < writeBoard.length; i++) {
-            let sqId = i;
-            console.log(sqId);
-            
-        }
         
-        //let writeSq = document.getElementById('3');
-        writeSq.innerHTML = `${sq3}`;
+        console.log("writeMove function fired");
+        let writeSq = document.getElementById(`${writePosition}`);
+        writeSq.innerHTML = `X`;
     }
     //writeMove();
 
@@ -129,6 +142,7 @@
     
 
     //Return statement will go here
+    return {writeMove};
     
    })();//End of display module **********************************************************************************************
 
@@ -144,9 +158,10 @@
 
        
 
-        let whoseTurn = "X";//hardcoded for now
+        let whoseTurn;//hardcoded for now
+        let currentMarker = playerXobj.playersName; //hardcoded for now
         gameBoard.talkToMe();//This is how you call functions that are returned from other modules
-        const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
+        //const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
         console.log(gameBoard.randomPhrase);
         const getPlayer = () => {
             //code to grab player names from form goes in here...
@@ -161,9 +176,17 @@
            
         }
 
+        const startGame = () => {
+            //fires when start button is clicked...
+            whoseTurn = playerXobj.playersName;
+            console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
+            
+        }
+
         const setMove = () => {
-            let currentPlayer = "X"; //hardcoded for now
-            let marker = "X"; //hardcoded for now
+            let currentPlayer = whoseTurn; 
+            console.log(currentPlayer);
+            let marker = currentMarker; 
             console.log(`The marker of the player whose turn it is: ${marker}`);
             const positions = document.querySelectorAll('.squares');
             console.log(positions);
@@ -174,8 +197,9 @@
                     let checked = checkVacant(playerSelected);
                     if (checked) {
                         console.log("Yay, it's free");
-                        // call writeMove on display module...
+                        display.writeMove(`${marker}`, `${playerSelected}`);
                         //display.writeMove(marker, playerSelected);
+                        //return true; //true that player has played their move
                     } else {
                         console.log("Nope, not free");
                     }
@@ -201,7 +225,7 @@
         }
 
 
-        return {getPlayer, sayTurn};
+        return {getPlayer, startGame};
     })();//This is the end of the Game module *******************************************************************************
 
     
