@@ -41,6 +41,16 @@
         function accessBoard() {//making the board data available without exposing board variable
             return board;
         }
+
+        const updateBoardArray = (positionTaken, marker) => {
+            let updatePosition = positionTaken;
+            let updateMarker = marker;
+            console.log(`the function to update board array is running and awaiting further instructions...`);
+            console.log(`this function was sent the position: ${updatePosition}, and the marker: ${updateMarker}`);
+            board[updatePosition] = updateMarker;
+            console.log(board);
+        }
+
         //create & render the grid in the UI
         const boardGrid = ( () => {
             const numOfDivs = 3*3;
@@ -58,7 +68,7 @@
             }
         })
         boardGrid();//renders here rather than in display module to reduce coupling
-        return {talkToMe, randomPhrase, accessBoard};
+        return {talkToMe, randomPhrase, accessBoard, updateBoardArray};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
@@ -80,10 +90,10 @@
         startBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
         startBtn.innerHTML = "START";
         startBtnWrapper.appendChild(startBtn);
-        //startBtn.onclick = () => game.startGame(); //references the getPlayer function in game module that has been exposed
+        //startBtn.onclick = () => game.playGame(); //references the getPlayer function in game module that has been exposed
         startBtn.addEventListener('click', (e) => {
             console.log("start btn got clicked");
-            game.startGame();
+            game.playGame();
         });
 
     }
@@ -98,7 +108,8 @@
         
         console.log("writeMove function fired");
         let writeSq = document.getElementById(`${writePosition}`);
-        writeSq.innerHTML = `X`;
+        writeSq.innerHTML = writeMarker;
+
     }
     //writeMove();
 
@@ -155,11 +166,13 @@
 
     //This is the Game module: it will control the flow of the game **********************************************************
     const game = (() => {
-
-       
-
-        let whoseTurn;//hardcoded for now
         let currentMarker = playerXobj.playersName; //hardcoded for now
+        if (currentMarker == playerXobj.playersName) {
+            currentMarker = playerXobj.playersMarker;
+        }
+        else {
+            currentMarker = playerOobj.playersMarker;
+        }
         gameBoard.talkToMe();//This is how you call functions that are returned from other modules
         //const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
         console.log(gameBoard.randomPhrase);
@@ -176,15 +189,18 @@
            
         }
 
-        const startGame = () => {
+        const playGame = () => {
             //fires when start button is clicked...
-            whoseTurn = playerXobj.playersName;
+            let whoseTurn = playerXobj.playersName;//Player x always goes first...
             console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
-            
+            setMove(whoseTurn);
+            //console.log(whoseTurn);
+
+            //whoseTurn is just for telling setMove who is going first...
         }
 
-        const setMove = () => {
-            let currentPlayer = whoseTurn; 
+        const setMove = (turn) => {
+            let currentPlayer = turn; 
             console.log(currentPlayer);
             let marker = currentMarker; 
             console.log(`The marker of the player whose turn it is: ${marker}`);
@@ -198,17 +214,19 @@
                     if (checked) {
                         console.log("Yay, it's free");
                         display.writeMove(`${marker}`, `${playerSelected}`);
-                        //display.writeMove(marker, playerSelected);
-                        //return true; //true that player has played their move
+                       //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
+                        gameBoard.updateBoardArray(playerSelected, marker);
+                        
                     } else {
                         console.log("Nope, not free");
+                    
                     }
 
                 });
             });
         }
 
-        setMove();
+        //setMove();
 
         function checkVacant(sq) {
             let isVacant;
@@ -225,7 +243,7 @@
         }
 
 
-        return {getPlayer, startGame};
+        return {getPlayer, playGame};
     })();//This is the end of the Game module *******************************************************************************
 
     
