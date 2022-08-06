@@ -7,11 +7,12 @@
     //This is the factory func for creating player objects*****************************************************************
     const createPlayer = (playerName) => {
         const playersName = playerName;
+        let defaultName;
         let playersMarker;
         const selectPosition = () => {
             console.log("for now we just say i can make a choice...")
         }
-        return {playersName, playersMarker, selectPosition};
+        return {playersName, playersMarker, defaultName, selectPosition};
     }//This is the end of the createPlayer() factory function ************************************************************
 
 
@@ -19,23 +20,18 @@
     //These are the player objects themselves*****************************************************************************
     const playerXobj = createPlayer("Player X");
     playerXobj.playersMarker = "X";
+    playerXobj.defaultName = "Player X";
     const playerOobj = createPlayer("Player O");
     playerOobj.playersMarker = "O";
+    playerOobj.defaultName = "Player O";
     console.log(`PlayerO has a marker of: ${playerOobj.playersMarker}`);
     console.log(`Player X has a marker of: ${playerXobj.playersMarker}`);
     //********************************************************************************************************************
 
 
-
-
-
-
-
-
-
     //This is the Gameboard module: all the UI stuff is in here for now
     const gameBoard = (() => { //*****************************************************************************************
-        let board = ["X", " ", " ", " ", " ", " ", " ", " ", " "];
+        let board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
         let randomPhrase = "One in the hand's worth two in the bush";
         const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
         function accessBoard() {//making the board data available without exposing board variable
@@ -72,12 +68,6 @@
     })();//This is the end of the Gameboard module **************************************************************************
 
    
-
-
-
-
-
-
 
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
@@ -150,22 +140,15 @@
     });
     insertPlayerNameForm();
 
-    
-
     //Return statement will go here
     return {writeMove};
     
    })();//End of display module **********************************************************************************************
 
 
-
-
-
-
-
-
     //This is the Game module: it will control the flow of the game **********************************************************
     const game = (() => {
+        let gameResult = 'inPlay';// inPlay means still playing | win means win | tie means tie!
         let currentMarker = playerXobj.playersName; //hardcoded for now
         if (currentMarker == playerXobj.playersName) {
             currentMarker = playerXobj.playersMarker;
@@ -174,7 +157,6 @@
             currentMarker = playerOobj.playersMarker;
         }
         gameBoard.talkToMe();//This is how you call functions that are returned from other modules
-        //const sayTurn = () => console.log(whoseTurn,gameBoard.randomPhrase);
         console.log(gameBoard.randomPhrase);
         const getPlayer = () => {
             //code to grab player names from form goes in here...
@@ -216,14 +198,70 @@
                         display.writeMove(`${marker}`, `${playerSelected}`);
                        //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
                         gameBoard.updateBoardArray(playerSelected, marker);
-                        
+                        //TODO call function to check for win or tie: call it checkResult()
+                        console.log(gameResult);
+                        gameResult = checkResult();//value is returned from checkResult to this variable
+                        console.log(gameResult);
+                        if (gameResult === 'win' || gameResult === 'tie') {
+                            //TODO write and call a function: endGame()
+                            endGame();
+                        } else {
+                            //somehow switch player and do the turn again :o
+                            console.log("game continues....");
+                            //save return value of togglePlayer to currentPlayer
+                            currentPlayer = togglePlayer(currentPlayer);
+                            console.log(`was the return value passed ok: ${currentPlayer}`);
+                            //TODO now must update the marker to whateve the player is
+                            marker = updateMarker(currentPlayer);
+                        }
                     } else {
                         console.log("Nope, not free");
-                    
+                        //TODO:write and call a function display.writeNotVacantMsg
                     }
 
                 });
             });
+        }
+
+        const checkResult = () => {
+            let checkingBoardGame = gameBoard.accessBoard();
+            console.log(checkingBoardGame);
+            return 'inPlay';//hardcoded for testing
+        }
+
+        const endGame = () => {
+            console.log('GAME OVER');
+            //maybe remove event listener from the board divs?
+            //deliver result message usning functions in display module
+        }
+
+        const togglePlayer = (name) => {
+            //if curentPlayer is X, set currentPlayer to O, else if currentPlayer is O set it to X
+            let playingNow = name;
+            console.log(`did name come through of current player? ${playingNow}`);
+            let nextPlayer;
+            if (playingNow === 'Player X') {
+                //return "Player O";
+                nextPlayer = "Player O";
+            } else if (playingNow === 'Player O') {
+                //return "Player X";
+                nextPlayer = "Player X";
+            }
+            console.log(`curentPlayer should have been toggled: ${nextPlayer}`);
+            return nextPlayer;
+        }
+
+        const updateMarker = (name) => {
+            //set the marker to match the player and return it
+            let whoseMarker = name;
+            let nextMarker;
+            if (whoseMarker === "Player X") {
+                nextMarker = "X";
+            } else if (whoseMarker === "Player O") {
+                nextMarker = "O";
+            }
+            console.log(`did name come through of whose marker it is? ${whoseMarker}`);
+            return nextMarker;
         }
 
         //setMove();
@@ -245,10 +283,6 @@
 
         return {getPlayer, playGame};
     })();//This is the end of the Game module *******************************************************************************
-
-    
-
-
 
 
 }()) ;//This is the end of the enclosing anonyomus closure -----------------END------------------------------------------------------------

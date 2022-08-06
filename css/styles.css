@@ -1,6 +1,6 @@
 html, body {
     
-    background-image: linear-gradient(rgb(13, 5, 34), 80%, rgb(252, 252, 102));
+    background-image: linear-gradient(rgb(13, 5, 34), 80%, rgb(62, 126, 245));
     margin: 0;
    
 }
@@ -42,14 +42,14 @@ main {
     width: 400px;
     border-right: solid;
     border-bottom: solid;
-    border-color: darkred;
+    border-color: rgb(139, 0, 0);
     border-width: 0.5px;
 }
 
 .squares{
     border-top: solid;
     border-left: solid;
-    border-color: darkred;
+    border-color: rgb(139, 0, 0);
     border-width: 0.5px;
 }
 
