@@ -9,7 +9,7 @@ html, body {
     display: flex;    
     flex-direction: column;
     min-height: 100vh;
-    background-color:rgb(245, 245, 245);
+    background-color:rgba(0, 0, 0, 0);
     max-width: 50%;
     margin: auto;
 }
@@ -17,7 +17,8 @@ html, body {
 header {
     display: flex;
     justify-content: center;
-    background-color: rgb(236, 236, 236);
+    background-color: rgba(0, 0, 0, 0);
+    min-height: 20%;
     
 }
 
@@ -26,12 +27,14 @@ main {
     align-items: center;
     justify-content: center;
     flex: 1;
+    flex-direction: column;
 }
 
 #mainTitle {
-    color: rgb(13, 5, 34);
-    font-family: 'Staatliches', cursive;
-    font-size: 2rem;
+    color: rgb(248, 246, 246);
+    font-family: 'Black Ops One', cursive;
+    padding-top: 5%;
+    font-size: 4rem;
 }
 
 #gbGridContainer {
@@ -42,21 +45,46 @@ main {
     width: 400px;
     border-right: solid;
     border-bottom: solid;
-    border-color: rgb(139, 0, 0);
+    border-color: rgb(248, 246, 246);
     border-width: 0.5px;
+}
+
+#startBtnWrapper {
+ margin-top: 5%;
+ max-width: 200px;
+ max-height: 90px;
+}
+
+#startBtn {
+    border-radius: 15px;
+    border-color:rgb(248, 246, 246);
+    background-color: rgba(0, 0, 0, 0);
+    color:rgb(248, 246, 246);
+    
+    font-size: 3rem;
+    font-family: 'Black Ops One', cursive;
+    padding-right: 25px;
 }
 
 .squares{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-top: solid;
     border-left: solid;
-    border-color: rgb(139, 0, 0);
+    border-color: rgb(248, 246, 246);
     border-width: 0.5px;
+    color: rgb(248, 246, 246);
+    font-family: 'Black Ops One', cursive;
+    font-size:3em;
+    
 }
+
 
 footer {
     display: flex;
-   background-color: rgb(236, 236, 236);
-   color:rgb(14, 13, 13);
+   background-color: rgba(0, 0, 0, 0);
+   color:rgb(248, 246, 246);
    margin-top: auto;
    justify-content: center;
    padding-top: 1em;

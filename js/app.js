@@ -102,7 +102,7 @@
 
     }
     //writeMove();
-
+/*
     const insertPlayerNameForm = ( () => {
         const linebreak = document.createElement('br');
         const formWrapper = document.createElement('div');
@@ -139,7 +139,7 @@
         enterBtn.onclick = () => game.getPlayer(); //references the getPlayer function in game module that has been exposed
     });
     insertPlayerNameForm();
-
+*/
     //Return statement will go here
     return {writeMove};
     
