@@ -71,7 +71,6 @@
 
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
-    //console.log(gameBoard.accessBoard);//just testing access to gameBoard module
     const createStartBtn = () => {
         const startBtnWrapper = document.getElementById('startBtnWrapper');
         const startBtn = document.createElement('button');
@@ -80,7 +79,6 @@
         startBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
         startBtn.innerHTML = "START";
         startBtnWrapper.appendChild(startBtn);
-        //startBtn.onclick = () => game.playGame(); //references the getPlayer function in game module that has been exposed
         startBtn.addEventListener('click', (e) => {
             console.log("start btn got clicked");
             game.playGame();
@@ -92,16 +90,11 @@
     const writeMove = (marker, position) => {
         let writeMarker = marker;//players marker...x or o
         let writePosition = position;//id num of players chosen sq to mark
-        //let writeBoard = gameBoard.accessBoard();
-        //let [sq0, sq1, sq2, sq3, sq4, sq5, sq6, sq7, sq8] = writeBoard;
-        //console.log(`sq3 says: ${sq3}`);
-        
         console.log("writeMove function fired");
         let writeSq = document.getElementById(`${writePosition}`);
         writeSq.innerHTML = writeMarker;
-
     }
-    //writeMove();
+    
 /*
     const insertPlayerNameForm = ( () => {
         const linebreak = document.createElement('br');
@@ -200,9 +193,9 @@
                         gameBoard.updateBoardArray(playerSelected, marker);
                         //TODO call function to check for win or tie: call it checkResult()
                         console.log(gameResult);
-                        gameResult = checkResult();//value is returned from checkResult to this variable
+                        gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
                         console.log(gameResult);
-                        if (gameResult === 'win' || gameResult === 'tie') {
+                        if (gameResult === 'xWin' || gameResult === 'oWin' || gameResult === 'tie') {
                             //TODO write and call a function: endGame()
                             endGame();
                         } else {
@@ -224,9 +217,64 @@
         }
 
         const checkResult = () => {
-            let checkingBoardGame = gameBoard.accessBoard();
-            console.log(checkingBoardGame);
-            return 'inPlay';//hardcoded for testing
+            const boardResult = gameBoard.accessBoard();
+            console.log(boardResult);
+            let xWin = ['X','X','X'];
+            console.log(typeof xWin);
+            let oWin = ['O', 'O', 'O'];
+            let horiz1 = [boardResult[0],boardResult[1],boardResult[2]];
+            console.log(`horiz1 contains ${horiz1}`);
+            console.log(typeof horiz1);
+           // console.log(horiz1.toString());
+           // console.log(horiz1);
+            //console.log(typeof horiz1);
+            let horiz2 = [boardResult[3],boardResult[4],boardResult[5]];
+            console.log(`horiz2 contains ${horiz2}`);
+            let horiz3 = [boardResult[6],boardResult[7],boardResult[8]];
+            console.log(`horiz3 contains ${horiz3}`);
+            let vert1 = [boardResult[0],boardResult[3],boardResult[6]];
+            console.log(`vert1 contains ${vert1}`);
+            console.log(`xWin contains ${xWin}`);
+            let vert2 = [boardResult[1],boardResult[4],boardResult[7]];
+            console.log(`vert2 contains ${vert2}`);
+            let vert3 = [boardResult[2],boardResult[5],boardResult[8]];
+            console.log(`vert3 contains ${vert3}`);
+            let diag1 = [boardResult[2],boardResult[4],boardResult[6]];
+            console.log(`diag1 contains ${diag1}`);
+            let diag2 = [boardResult[0],boardResult[4],boardResult[8]];
+            console.log(`diag2 contains ${diag2}`);
+            if (
+                xWin.join('') === vert1.join('')||
+                xWin.join('')===vert2.join('')||
+                xWin.join('')===vert3.join('')||
+                xWin.join('')===horiz1.join('')||
+                xWin.join('')===horiz2.join('')||
+                xWin.join('')===horiz3.join('')||
+                xWin.join('')===diag1.join('')||
+                xWin.join('')===diag2.join('')
+                ) {
+                console.log('win line played!!! PLAYER X WINS !!!*****************************************************');
+                return 'xWon';
+            } else if (
+                oWin.join('') === vert1.join('')||
+                oWin.join('')===vert2.join('')||
+                oWin.join('')===vert3.join('')||
+                oWin.join('')===horiz1.join('')||
+                oWin.join('')===horiz2.join('')||
+                oWin.join('')===horiz3.join('')||
+                oWin.join('')===diag1.join('')||
+                oWin.join('')===diag2.join('')
+            ) {
+                console.log('win line played!!! PLAYER O WINS !!!*****************************************************');
+                return 'oWon';
+            } else if (boardResult.includes(" ")===false) {
+                console.log('The game is a TIE!!!***************************************************************************');
+                return 'tie';
+            }
+
+
+            
+            
         }
 
         const endGame = () => {
