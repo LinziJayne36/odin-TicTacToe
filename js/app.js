@@ -94,6 +94,55 @@
         let writeSq = document.getElementById(`${writePosition}`);
         writeSq.innerHTML = writeMarker;
     }
+
+    const showTurnMsg = (currentName) => {
+        const turnName = currentName;
+        console.log(`Hey ${turnName}, it is your turn now`);
+        const msgArea = document.getElementById('msgWrapper');
+        const yourTurnMsg = document.createElement('div');
+        yourTurnMsg.setAttribute('id', 'turnMsgTxt');
+        msgArea.appendChild(yourTurnMsg);
+        yourTurnMsg.innerHTML = `Hey ${turnName}, it is your turn now`;
+    }
+
+    const removeTurnMsg = () => {
+        const rmvTurnMsg = document.getElementById('msgWrapper');
+        rmvTurnMsg.innerHTML = '';
+    }
+
+    const displayNotVacant =() => {
+        console.log("Hey dude! That one is already taken. Try another square...");
+        const msgArea = document.getElementById('msgWrapper');
+        const notVacantMsg = document.createElement('div');
+        notVacantMsg.setAttribute('id', 'vacancyTxt');//for styling css
+        msgArea.appendChild(notVacantMsg);
+        notVacantMsg.innerHTML = "Hey! That one's taken: choose an empty square...";
+    }
+
+    const removeVacancyMsg = () => {
+        const rmvVacanceMsg = document.getElementById('vacancyTxt');
+        rmvVacanceMsg.innerHTML = ''; 
+    }
+
+    const declareResultMsg = (gameResult) => {
+    
+        const endResult = gameResult;
+        let msgTxt;
+        console.log(msgTxt);
+        if (endResult === 'xWon') {
+            msgTxt = 'GAME OVER! Player X has won!'
+        } else if (endResult === 'oWon') {
+            msgTxt = 'GAME OVER! Player O has won!'
+        } else if (endResult === 'tie') {
+            msgTxt = 'GAME OVER! It was a tie!'
+        }
+        const resultMsgArea = document.getElementById('msgWrapper');
+        const resultMsg = document.createElement('div');
+        resultMsg.setAttribute('id', 'resultsMsg');
+        resultMsgArea.appendChild(resultMsg);
+        //resultMsgArea.innerHTML = '';
+        resultMsg.innerHTML = ` ${msgTxt}`;
+    }
     
 /*
     const insertPlayerNameForm = ( () => {
@@ -134,7 +183,7 @@
     insertPlayerNameForm();
 */
     //Return statement will go here
-    return {writeMove};
+    return {writeMove, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg};
     
    })();//End of display module **********************************************************************************************
 
@@ -163,11 +212,12 @@
             console.log(`Did it work? If so, then player O is: ${playerOobj.playersName} and player X is: ${playerXobj.playersName} `);
            
         }
-
+ let whoseTurn = playerXobj.playersName;//Player x always goes first...
         const playGame = () => {
             //fires when start button is clicked...
-            let whoseTurn = playerXobj.playersName;//Player x always goes first...
+           
             console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
+           // display.showTurnMsg(whoseTurn);//call function to display take your turn message
             setMove(whoseTurn);
             //console.log(whoseTurn);
 
@@ -181,7 +231,9 @@
             console.log(`The marker of the player whose turn it is: ${marker}`);
             const positions = document.querySelectorAll('.squares');
             console.log(positions);
+            display.showTurnMsg(whoseTurn);//call function to display take your turn message
             positions.forEach((position) => {
+                
                 position.addEventListener('click', (e) => {
                     let playerSelected = position.id;
                     console.log(`Is this the clicked elements id? : ${playerSelected}`);
@@ -189,31 +241,39 @@
                     if (checked) {
                         console.log("Yay, it's free");
                         display.writeMove(`${marker}`, `${playerSelected}`);
+                        display.removeTurnMsg();
+                        display.removeTurnMsg();
                        //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
                         gameBoard.updateBoardArray(playerSelected, marker);
                         //TODO call function to check for win or tie: call it checkResult()
                         console.log(gameResult);
                         gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
                         console.log(gameResult);
-                        if (gameResult === 'xWin' || gameResult === 'oWin' || gameResult === 'tie') {
+                        if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
                             //TODO write and call a function: endGame()
-                            endGame();
+                            endGame(gameResult);
                         } else {
                             //somehow switch player and do the turn again :o
                             console.log("game continues....");
                             //save return value of togglePlayer to currentPlayer
                             currentPlayer = togglePlayer(currentPlayer);
                             console.log(`was the return value passed ok: ${currentPlayer}`);
+                            display.showTurnMsg(currentPlayer);//call function to display take your turn message
                             //TODO now must update the marker to whateve the player is
                             marker = updateMarker(currentPlayer);
+                            
                         }
+
                     } else {
                         console.log("Nope, not free");
                         //TODO:write and call a function display.writeNotVacantMsg
+                        display.displayNotVacant();
                     }
+                   
 
                 });
             });
+            
         }
 
         const checkResult = () => {
@@ -277,10 +337,13 @@
             
         }
 
-        const endGame = () => {
+        const endGame = (result) => {
+            const results = result;
             console.log('GAME OVER');
+            console.log(`gameResult passed: ${results}`);
+            display.declareResultMsg(results);
             //maybe remove event listener from the board divs?
-            //deliver result message usning functions in display module
+            //deliver result message usning functions in display module declareResult()
         }
 
         const togglePlayer = (name) => {

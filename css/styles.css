@@ -66,6 +66,14 @@ main {
     padding-right: 25px;
 }
 
+#turnMsgTxt {
+    color:rgb(248, 246, 246);
+}
+
+#resultsMsg {
+    color:rgb(248, 246, 246);
+}
+
 .squares{
     display: flex;
     align-items: center;
