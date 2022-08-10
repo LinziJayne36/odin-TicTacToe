@@ -36,6 +36,12 @@
             return board;
         }
 
+        const emptyBoardArray = () => {
+            board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+        }
+
+        
+
         const updateBoardArray = (positionTaken, marker) => {
             let updatePosition = positionTaken;
             let updateMarker = marker;
@@ -61,8 +67,8 @@
                 jsDivs.setAttribute('id', `${i}`);
             }
         })
-        boardGrid();//renders here rather than in display module to reduce coupling
-        return {accessBoard, updateBoardArray};
+        boardGrid();
+        return {accessBoard, updateBoardArray, emptyBoardArray};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
@@ -131,7 +137,6 @@
     
         const endResult = gameResult;
         let msgTxt;
-        console.log(msgTxt);
         if (endResult === 'xWon') {
             msgTxt = 'GAME OVER! Player X has won!'
         } else if (endResult === 'oWon') {
@@ -152,10 +157,13 @@
         let clearId = 0;//id's of squares directly correspond to array indexes 0-9 so if we can grab squares with an id through 0-9 we can access the inner html
         const clearSquares = document.querySelectorAll('.squares');
         for (let i = 0; i < clearSquares.length; i++) {
-            clearId++;
+            
             let rmvMarker = document.getElementById(`${clearId}`);
-            rmvMarker.innerHTML = '';
-
+            setTimeout(function() {
+                rmvMarker.innerHTML = '';
+            }, 1000);
+            clearId++;
+            
         }
     }
     
@@ -215,7 +223,7 @@
         }
        
         const getPlayer = () => {
-            //code to grab player names from form goes in here...
+            //code to grab player names from form 
             let playerXName = document.getElementById('nameX').value;
             let playerOName = document.getElementById('nameO').value;
             console.log(`Player X Name is: ${playerXName}`);
@@ -260,7 +268,7 @@
                        //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
                         gameBoard.updateBoardArray(playerSelected, marker);
                         //TODO call function to check for win or tie: call it checkResult()
-                        console.log(gameResult);
+                       // console.log(gameResult);
                         gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
                         console.log(gameResult);
                         if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
@@ -353,10 +361,11 @@
             console.log('GAME OVER');
             console.log(`gameResult passed: ${results}`);
             display.declareResultMsg(results);//deliver result message usning functions in display module declareResultMsg()
-            gameBoard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
-            console.log(gameBoard.board);
+            //gameBoard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+            gameBoard.emptyBoardArray();
+            console.log(gameBoard.accessBoard());
             //TODO call function to remove markers from UI
-            display.clearBoard();
+            display.clearBoard();//TODO still need to disable board until restart though
             //TODO reset all initial game variables
             //TODO call to clear the board and gameover message
             //TODO call to display start btn again
