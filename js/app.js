@@ -32,9 +32,7 @@
     //This is the Gameboard module: all the UI stuff is in here for now
     const gameBoard = (() => { //*****************************************************************************************
         let board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
-        let randomPhrase = "One in the hand's worth two in the bush";
-        const talkToMe = () => console.log(`Well, something is working at least.Here's the board contents: ${board}`);
-        function accessBoard() {//making the board data available without exposing board variable
+        function accessBoard() {//making the board data available without exposing board variable - for other code that needs to read but not change its data
             return board;
         }
 
@@ -64,7 +62,7 @@
             }
         })
         boardGrid();//renders here rather than in display module to reduce coupling
-        return {talkToMe, randomPhrase, accessBoard, updateBoardArray};
+        return {accessBoard, updateBoardArray};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
@@ -86,6 +84,11 @@
 
     }
     createStartBtn();
+
+    const removeStartBtn = () => {
+        const rmvStartBtn = document.getElementById('startBtn');
+        rmvStartBtn.remove();
+    }
 
     const writeMove = (marker, position) => {
         let writeMarker = marker;//players marker...x or o
@@ -143,6 +146,18 @@
         //resultMsgArea.innerHTML = '';
         resultMsg.innerHTML = ` ${msgTxt}`;
     }
+
+    const clearBoard = () => {
+        console.log('func to clear board ui was called');
+        let clearId = 0;//id's of squares directly correspond to array indexes 0-9 so if we can grab squares with an id through 0-9 we can access the inner html
+        const clearSquares = document.querySelectorAll('.squares');
+        for (let i = 0; i < clearSquares.length; i++) {
+            clearId++;
+            let rmvMarker = document.getElementById(`${clearId}`);
+            rmvMarker.innerHTML = '';
+
+        }
+    }
     
 /*
     const insertPlayerNameForm = ( () => {
@@ -183,7 +198,7 @@
     insertPlayerNameForm();
 */
     //Return statement will go here
-    return {writeMove, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg};
+    return {writeMove, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg, removeStartBtn, clearBoard};
     
    })();//End of display module **********************************************************************************************
 
@@ -198,8 +213,7 @@
         else {
             currentMarker = playerOobj.playersMarker;
         }
-        gameBoard.talkToMe();//This is how you call functions that are returned from other modules
-        console.log(gameBoard.randomPhrase);
+       
         const getPlayer = () => {
             //code to grab player names from form goes in here...
             let playerXName = document.getElementById('nameX').value;
@@ -215,7 +229,7 @@
  let whoseTurn = playerXobj.playersName;//Player x always goes first...
         const playGame = () => {
             //fires when start button is clicked...
-           
+           display.removeStartBtn();
             console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
            // display.showTurnMsg(whoseTurn);//call function to display take your turn message
             setMove(whoseTurn);
@@ -285,9 +299,6 @@
             let horiz1 = [boardResult[0],boardResult[1],boardResult[2]];
             console.log(`horiz1 contains ${horiz1}`);
             console.log(typeof horiz1);
-           // console.log(horiz1.toString());
-           // console.log(horiz1);
-            //console.log(typeof horiz1);
             let horiz2 = [boardResult[3],boardResult[4],boardResult[5]];
             console.log(`horiz2 contains ${horiz2}`);
             let horiz3 = [boardResult[6],boardResult[7],boardResult[8]];
@@ -341,9 +352,15 @@
             const results = result;
             console.log('GAME OVER');
             console.log(`gameResult passed: ${results}`);
-            display.declareResultMsg(results);
-            //maybe remove event listener from the board divs?
-            //deliver result message usning functions in display module declareResult()
+            display.declareResultMsg(results);//deliver result message usning functions in display module declareResultMsg()
+            gameBoard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+            console.log(gameBoard.board);
+            //TODO call function to remove markers from UI
+            display.clearBoard();
+            //TODO reset all initial game variables
+            //TODO call to clear the board and gameover message
+            //TODO call to display start btn again
+            
         }
 
         const togglePlayer = (name) => {

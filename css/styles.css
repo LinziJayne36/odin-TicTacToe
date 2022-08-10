@@ -50,9 +50,7 @@ main {
 }
 
 #startBtnWrapper {
- margin-top: 5%;
- max-width: 200px;
- max-height: 90px;
+    margin-top: 2rem;
 }
 
 #startBtn {
@@ -60,18 +58,20 @@ main {
     border-color:rgb(248, 246, 246);
     background-color: rgba(0, 0, 0, 0);
     color:rgb(248, 246, 246);
-    
     font-size: 3rem;
     font-family: 'Black Ops One', cursive;
     padding-right: 25px;
 }
 
-#turnMsgTxt {
-    color:rgb(248, 246, 246);
-}
 
-#resultsMsg {
+
+#resultsMsg,
+#turnMsgTxt,
+#vacancyTxt {
     color:rgb(248, 246, 246);
+    margin-top: 3rem;
+    font-size: 1.5em;
+    font-family: 'Black Ops One', cursive;
 }
 
 .squares{
