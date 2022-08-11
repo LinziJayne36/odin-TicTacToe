@@ -40,8 +40,6 @@
             board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
         }
 
-        
-
         const updateBoardArray = (positionTaken, marker) => {
             let updatePosition = positionTaken;
             let updateMarker = marker;
@@ -59,29 +57,33 @@
             function createDivs() {
                 jsDivs = document.createElement('div');
                 gridContainer.appendChild(jsDivs);
+                gridContainer.setAttribute('style', 'border-right: solid; border-bottom: solid; border-color: rgb(248, 246, 246); border-width: 0.5px;');
                 jsDivs.setAttribute('class', 'squares');
+                
             }
             for (let i = 0; i < numOfDivs; i++) {
                 //console.log(`created another grid div: ${i}`);
                 createDivs();
                 jsDivs.setAttribute('id', `${i}`);
             }
+            
         })
-        boardGrid();
-        return {accessBoard, updateBoardArray, emptyBoardArray};
+       // boardGrid();
+        return {accessBoard, updateBoardArray, emptyBoardArray, boardGrid};
     })();//This is the end of the Gameboard module **************************************************************************
 
    
 
    //This is the display module: it will control what is displayed in th UI 
    const display = (() => {//*************************************************************************************************
-    const createStartBtn = () => {
-        const startBtnWrapper = document.getElementById('startBtnWrapper');
+    const createStartBtn = (text="START") => {
+        const btnTxt = text;
+        const startBtnWrapper = document.getElementById('gbGridContainer');
         const startBtn = document.createElement('button');
         startBtn.setAttribute('id', 'startBtn');
         startBtn.setAttribute('type', 'button');
         startBtn.setAttribute('style', 'padding-left: 16px; padding-right: 16px; margin-top: 6px;');
-        startBtn.innerHTML = "START";
+        startBtn.innerHTML = `${btnTxt}`;
         startBtnWrapper.appendChild(startBtn);
         startBtn.addEventListener('click', (e) => {
             console.log("start btn got clicked");
@@ -89,7 +91,7 @@
         });
 
     }
-    createStartBtn();
+    createStartBtn('START');
 
     const removeStartBtn = () => {
         const rmvStartBtn = document.getElementById('startBtn');
@@ -111,7 +113,7 @@
         const yourTurnMsg = document.createElement('div');
         yourTurnMsg.setAttribute('id', 'turnMsgTxt');
         msgArea.appendChild(yourTurnMsg);
-        yourTurnMsg.innerHTML = `Hey ${turnName}, it is your turn now`;
+        yourTurnMsg.innerHTML = `${turnName}'s turn...`;
     }
 
     const removeTurnMsg = () => {
@@ -125,12 +127,12 @@
         const notVacantMsg = document.createElement('div');
         notVacantMsg.setAttribute('id', 'vacancyTxt');//for styling css
         msgArea.appendChild(notVacantMsg);
-        notVacantMsg.innerHTML = "Hey! That one's taken: choose an empty square...";
+        notVacantMsg.innerHTML = "OCCUPIED! TRY AGAIN...";
     }
 
     const removeVacancyMsg = () => {
-        const rmvVacanceMsg = document.getElementById('vacancyTxt');
-        rmvVacanceMsg.innerHTML = ''; 
+        const rmvVacancyMsg = document.getElementById('vacancyTxt');
+        rmvVacancyMsg.innerHTML = ''; 
     }
 
     const declareResultMsg = (gameResult) => {
@@ -152,20 +154,34 @@
         resultMsg.innerHTML = ` ${msgTxt}`;
     }
 
+    const removeResultMsg = () => {
+        const rmvResultMsg = document.getElementById('msgWrapper');
+        rmvResultMsg.innerHTML = '';
+
+    }
+   
+
     const clearBoard = () => {
         console.log('func to clear board ui was called');
         let clearId = 0;//id's of squares directly correspond to array indexes 0-9 so if we can grab squares with an id through 0-9 we can access the inner html
         const clearSquares = document.querySelectorAll('.squares');
+        const grid = document.getElementById('gbGridContainer');
+
         for (let i = 0; i < clearSquares.length; i++) {
             
             let rmvMarker = document.getElementById(`${clearId}`);
             setTimeout(function() {
                 rmvMarker.innerHTML = '';
-            }, 1000);
+                grid.innerHTML = '';
+                grid.setAttribute('style', 'border-right: none; border-bottom: none;');
+            }, 4000);
             clearId++;
             
         }
+        
     }
+
+    
     
 /*
     const insertPlayerNameForm = ( () => {
@@ -206,7 +222,7 @@
     insertPlayerNameForm();
 */
     //Return statement will go here
-    return {writeMove, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg, removeStartBtn, clearBoard};
+    return {writeMove, createStartBtn, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg, removeResultMsg, removeStartBtn, clearBoard};
     
    })();//End of display module **********************************************************************************************
 
@@ -237,8 +253,10 @@
  let whoseTurn = playerXobj.playersName;//Player x always goes first...
         const playGame = () => {
             //fires when start button is clicked...
+           
+           gameBoard.boardGrid();
            display.removeStartBtn();
-            console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
+           console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
            // display.showTurnMsg(whoseTurn);//call function to display take your turn message
             setMove(whoseTurn);
             //console.log(whoseTurn);
@@ -274,6 +292,12 @@
                         if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
                             //TODO write and call a function: endGame()
                             endGame(gameResult);
+                            setTimeout(function() {
+                                
+                                display.createStartBtn('REPLAY');
+                                display.removeResultMsg();
+                            }, 4400);
+                            
                         } else {
                             //somehow switch player and do the turn again :o
                             console.log("game continues....");
@@ -366,6 +390,7 @@
             console.log(gameBoard.accessBoard());
             //TODO call function to remove markers from UI
             display.clearBoard();//TODO still need to disable board until restart though
+            
             //TODO reset all initial game variables
             //TODO call to clear the board and gameover message
             //TODO call to display start btn again

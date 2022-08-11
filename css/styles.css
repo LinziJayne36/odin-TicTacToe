@@ -35,33 +35,36 @@ main {
     font-family: 'Black Ops One', cursive;
     padding-top: 5%;
     font-size: 4rem;
+    margin: auto;
 }
 
 #gbGridContainer {
-    display: inline-grid;
+
+    display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
+    margin: auto;
     height: 400px;
     width: 400px;
-    border-right: solid;
-    border-bottom: solid;
-    border-color: rgb(248, 246, 246);
-    border-width: 0.5px;
 }
 
-#startBtnWrapper {
+/*#startBtnWrapper {
     margin-top: 2rem;
-}
+    
+}*/
 
 #startBtn {
+    grid-column: 2/3;
+    grid-row: 2/3;
     border-radius: 15px;
     border-color:rgb(248, 246, 246);
     background-color: rgba(0, 0, 0, 0);
     color:rgb(248, 246, 246);
     font-size: 3rem;
     font-family: 'Black Ops One', cursive;
-    padding-right: 25px;
+    
 }
+
 
 
 
@@ -70,7 +73,7 @@ main {
 #vacancyTxt {
     color:rgb(248, 246, 246);
     margin-top: 3rem;
-    font-size: 1.5em;
+    font-size: 2em;
     font-family: 'Black Ops One', cursive;
 }
 
