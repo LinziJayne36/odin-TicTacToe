@@ -16,9 +16,10 @@ html, body {
 
 header {
     display: flex;
+    margin-top: 25%;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0);
-    min-height: 20%;
+    min-height: 40%;
     
 }
 
@@ -66,7 +67,9 @@ main {
 }
 
 
-
+#msgWrapper {
+    margin-bottom: 40%;
+}
 
 #resultsMsg,
 #turnMsgTxt,
