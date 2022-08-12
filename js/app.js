@@ -86,7 +86,6 @@
         startBtn.innerHTML = `${btnTxt}`;
         startBtnWrapper.appendChild(startBtn);
         startBtn.addEventListener('click', (e) => {
-            console.log("start btn got clicked");
             game.playGame();
         });
 
