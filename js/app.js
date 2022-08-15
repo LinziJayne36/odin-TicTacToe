@@ -21,12 +21,14 @@
     const playerXobj = createPlayer("Player X");
     playerXobj.playersMarker = "X";
     playerXobj.defaultName = "Player X";
-    const playerOobj = createPlayer("Player O");
+    const playerOobj = createPlayer("AI");
     playerOobj.playersMarker = "O";
-    playerOobj.defaultName = "Player O";
+    playerOobj.defaultName = "AI";
     console.log(`PlayerO has a marker of: ${playerOobj.playersMarker}`);
     console.log(`Player X has a marker of: ${playerXobj.playersMarker}`);
     //********************************************************************************************************************
+
+
 
 
     //This is the Gameboard module: all the UI stuff is in here for now
@@ -139,9 +141,9 @@
         const endResult = gameResult;
         let msgTxt;
         if (endResult === 'xWon') {
-            msgTxt = 'GAME OVER! Player X has won!'
+            msgTxt = 'GAME OVER! Player X WINS!'
         } else if (endResult === 'oWon') {
-            msgTxt = 'GAME OVER! Player O has won!'
+            msgTxt = 'GAME OVER! AI WINS!'
         } else if (endResult === 'tie') {
             msgTxt = 'GAME OVER! It was a tie!'
         }
@@ -402,9 +404,9 @@
             console.log(`did name come through of current player? ${playingNow}`);
             let nextPlayer;
             if (playingNow === 'Player X') {
-                //return "Player O";
-                nextPlayer = "Player O";
-            } else if (playingNow === 'Player O') {
+                //return "AI";
+                nextPlayer = "AI";
+            } else if (playingNow === 'AI') {
                 //return "Player X";
                 nextPlayer = "Player X";
             }
@@ -418,7 +420,7 @@
             let nextMarker;
             if (whoseMarker === "Player X") {
                 nextMarker = "X";
-            } else if (whoseMarker === "Player O") {
+            } else if (whoseMarker === "AI") {
                 nextMarker = "O";
             }
             console.log(`did name come through of whose marker it is? ${whoseMarker}`);
