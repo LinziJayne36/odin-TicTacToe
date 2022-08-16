@@ -314,6 +314,7 @@
                                 console.log(`was the return value passed ok: ${currentPlayer}`);
                                 display.showTurnMsg(currentPlayer);//call function to display take your turn message
                                 marker = updateMarker(currentPlayer);
+                               // let aiChecked;
                                 if (currentPlayer === "AI") {
                                     console.log("AI should take its turn now");
                                     let aiChoice = aiSelection();
@@ -321,17 +322,30 @@
                                    //need to check if square is free and if not, choose again
                                    const boardCheck = gameBoard.accessBoard();
                                    if (boardCheck[aiChoice]!=" ") {
-                                        aiChoice = aiSelection();
                                         console.log('the first if condition for checking ai move said the square is occupied ');
+                                        aiChoice = aiSelection();
+                                        console.log(`New ai selectin id: ${aiChoice}`);
+                                        console.log(`square no. ${aiChoice} is free to make the move`);
+                                        setTimeout(function() {
+                                            display.writeMove("O", aiChoice);
+                                        }, 1500);
+                                        gameBoard.updateBoardArray(aiChoice, "O");
+                                        //display.removeTurnMsg();
+                                        currentPlayer = togglePlayer(currentPlayer);
+                                        marker = updateMarker(currentPlayer);
+
+                                        
                                    } else {
                                     console.log(`square no. ${aiChoice} is free to make the move`);
                                     setTimeout(function() {
                                         display.writeMove("O", aiChoice);
                                     }, 1500);
-                                    display.removeTurnMsg();
-                                    
+                                    gameBoard.updateBoardArray(aiChoice, "O");
+                                    //display.removeTurnMsg();
+                                    currentPlayer = togglePlayer(currentPlayer);
+                                    marker = updateMarker(currentPlayer);
                                    }
-                                   //if square is free, get AI to place marker on that square
+                                   
                                    
                                 }
                                 
