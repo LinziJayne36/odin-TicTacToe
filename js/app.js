@@ -21,10 +21,10 @@
     const playerXobj = createPlayer("Player X");
     playerXobj.playersMarker = "X";
     playerXobj.defaultName = "Player X";
-    const playerOobj = createPlayer("AI");
-    playerOobj.playersMarker = "O";
-    playerOobj.defaultName = "AI";
-    console.log(`PlayerO has a marker of: ${playerOobj.playersMarker}`);
+    const aiObj = createPlayer("AI");
+    aiObj.playersMarker = "O";
+    aiObj.defaultName = "AI";
+    console.log(`PlayerO has a marker of: ${aiObj.playersMarker}`);
     console.log(`Player X has a marker of: ${playerXobj.playersMarker}`);
     //********************************************************************************************************************
 
@@ -236,10 +236,10 @@
             currentMarker = playerXobj.playersMarker;
         }
         else {
-            currentMarker = playerOobj.playersMarker;
+            currentMarker = aiObj.playersMarker;
         }
        
-        const getPlayer = () => {
+        /*const getPlayer = () => {
             //code to grab player names from form 
             let playerXName = document.getElementById('nameX').value;
             let playerOName = document.getElementById('nameO').value;
@@ -250,11 +250,17 @@
             playerXobj.playersName = playerXName;
             console.log(`Did it work? If so, then player O is: ${playerOobj.playersName} and player X is: ${playerXobj.playersName} `);
            
+        }*/
+
+        let aiSelection = () => {
+            let randomSq = Math.floor(Math.random()*9);
+            return randomSq;
         }
- let whoseTurn = playerXobj.playersName;//Player x always goes first...
+
+  let whoseTurn = playerXobj.playersName;//Player x always goes first...
         const playGame = () => {
             //fires when start button is clicked...
-           
+          
            gameBoard.boardGrid();
            display.removeStartBtn();
            console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
@@ -273,53 +279,75 @@
             const positions = document.querySelectorAll('.squares');
             console.log(positions);
             display.showTurnMsg(whoseTurn);//call function to display take your turn message
-            positions.forEach((position) => {
+            
+                positions.forEach((position) => {
                 
-                position.addEventListener('click', (e) => {
-                    let playerSelected = position.id;
-                    console.log(`Is this the clicked elements id? : ${playerSelected}`);
-                    let checked = checkVacant(playerSelected);
-                    if (checked) {
-                        console.log("Yay, it's free");
-                        display.writeMove(`${marker}`, `${playerSelected}`);
-                        display.removeTurnMsg();
-                        display.removeTurnMsg();
-                       //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
-                        gameBoard.updateBoardArray(playerSelected, marker);
-                        //TODO call function to check for win or tie: call it checkResult()
-                       // console.log(gameResult);
-                        gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
-                        console.log(gameResult);
-                        if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
-                            //TODO write and call a function: endGame()
-                            endGame(gameResult);
-                            setTimeout(function() {
+                    position.addEventListener('click', (e) => {
+                        let playerSelected = position.id;
+                        console.log(`Is this the clicked elements id? : ${playerSelected}`);
+                        let checked = checkVacant(playerSelected);
+                        if (checked) {
+                            console.log("Yay, it's free");
+                            display.writeMove(`${marker}`, `${playerSelected}`);
+                            display.removeTurnMsg();
+                            display.removeTurnMsg();
+                           //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
+                            gameBoard.updateBoardArray(playerSelected, marker);
+                            //TODO call function to check for win or tie: call it checkResult()
+                           // console.log(gameResult);
+                            gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
+                            console.log(gameResult);
+                            if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
+                                //TODO write and call a function: endGame()
+                                endGame(gameResult);
+                                setTimeout(function() {
+                                    
+                                    display.createStartBtn('REPLAY');
+                                    display.removeResultMsg();
+                                }, 4400);
                                 
-                                display.createStartBtn('REPLAY');
-                                display.removeResultMsg();
-                            }, 4400);
-                            
+                            } else {
+                                //somehow switch player and do the turn again :o
+                                console.log("game continues....");
+                                //save return value of togglePlayer to currentPlayer
+                                currentPlayer = togglePlayer(currentPlayer);
+                                console.log(`was the return value passed ok: ${currentPlayer}`);
+                                display.showTurnMsg(currentPlayer);//call function to display take your turn message
+                                marker = updateMarker(currentPlayer);
+                                if (currentPlayer === "AI") {
+                                    console.log("AI should take its turn now");
+                                    let aiChoice = aiSelection();
+                                    console.log(`AI chose square: ${aiChoice}`);
+                                   //need to check if square is free and if not, choose again
+                                   const boardCheck = gameBoard.accessBoard();
+                                   if (boardCheck[aiChoice]!=" ") {
+                                        aiChoice = aiSelection();
+                                        console.log('the first if condition for checking ai move said the square is occupied ');
+                                   } else {
+                                    console.log(`square no. ${aiChoice} is free to make the move`);
+                                    setTimeout(function() {
+                                        display.writeMove("O", aiChoice);
+                                    }, 1500);
+                                    display.removeTurnMsg();
+                                    
+                                   }
+                                   //if square is free, get AI to place marker on that square
+                                   
+                                }
+                                
+                            }
+    
                         } else {
-                            //somehow switch player and do the turn again :o
-                            console.log("game continues....");
-                            //save return value of togglePlayer to currentPlayer
-                            currentPlayer = togglePlayer(currentPlayer);
-                            console.log(`was the return value passed ok: ${currentPlayer}`);
-                            display.showTurnMsg(currentPlayer);//call function to display take your turn message
-                            //TODO now must update the marker to whateve the player is
-                            marker = updateMarker(currentPlayer);
-                            
+                            console.log("Nope, not free");
+                            //TODO:write and call a function display.writeNotVacantMsg
+                            display.displayNotVacant();
                         }
-
-                    } else {
-                        console.log("Nope, not free");
-                        //TODO:write and call a function display.writeNotVacantMsg
-                        display.displayNotVacant();
-                    }
-                   
-
+                       
+    
+                    });
                 });
-            });
+            
+
             
         }
 
@@ -444,7 +472,7 @@
         }
 
 
-        return {getPlayer, playGame};
+        return {playGame};
     })();//This is the end of the Game module *******************************************************************************
 
 
