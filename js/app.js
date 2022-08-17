@@ -314,37 +314,33 @@
                                 console.log(`was the return value passed ok: ${currentPlayer}`);
                                 display.showTurnMsg(currentPlayer);//call function to display take your turn message
                                 marker = updateMarker(currentPlayer);
-                               // let aiChecked;
+                               let aiChecked;
                                 if (currentPlayer === "AI") {
                                     console.log("AI should take its turn now");
                                     let aiChoice = aiSelection();
                                     console.log(`AI chose square: ${aiChoice}`);
                                    //need to check if square is free and if not, choose again
-                                   const boardCheck = gameBoard.accessBoard();
-                                   if (boardCheck[aiChoice]!=" ") {
+                                  // const boardCheck = gameBoard.accessBoard();
+                                  // console.log(`this is what boardCheck[aiChoice] hold: ${boardCheck[aiChoice]}`);
+                                  aiChecked = checkVacant(aiChoice);
+                                  console.log(`aiChecked holds: ${aiChecked}`);
+                                   while (aiChecked === false) {
                                         console.log('the first if condition for checking ai move said the square is occupied ');
                                         aiChoice = aiSelection();
-                                        console.log(`New ai selectin id: ${aiChoice}`);
-                                        console.log(`square no. ${aiChoice} is free to make the move`);
-                                        setTimeout(function() {
-                                            display.writeMove("O", aiChoice);
-                                        }, 1500);
-                                        gameBoard.updateBoardArray(aiChoice, "O");
-                                        //display.removeTurnMsg();
-                                        currentPlayer = togglePlayer(currentPlayer);
-                                        marker = updateMarker(currentPlayer);
+                                        aiChecked = checkVacant(aiChoice);
+                                       
 
                                         
-                                   } else {
+                                   } 
                                     console.log(`square no. ${aiChoice} is free to make the move`);
                                     setTimeout(function() {
                                         display.writeMove("O", aiChoice);
                                     }, 1500);
                                     gameBoard.updateBoardArray(aiChoice, "O");
-                                    //display.removeTurnMsg();
+                                    display.removeTurnMsg();
                                     currentPlayer = togglePlayer(currentPlayer);
                                     marker = updateMarker(currentPlayer);
-                                   }
+                                   
                                    
                                    
                                 }
