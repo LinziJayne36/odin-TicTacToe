@@ -1,40 +1,31 @@
 // create an anonymous closure to hold ALL of the code, keeping the global scope free
-(function () {// -------------------------START----------------------------------------------------------------------------
+(function () {
     'use strict';
-    //All other code goes below this line please!
 
-
-    //This is the factory func for creating player objects*****************************************************************
+    //This is the factory func for creating player objects
     const createPlayer = (playerName) => {
-        const playersName = playerName;
-        let defaultName;
+        let playersName = playerName;
         let playersMarker;
-        const selectPosition = () => {
-            console.log("for now we just say i can make a choice...")
-        }
-        return {playersName, playersMarker, defaultName, selectPosition};
-    }//This is the end of the createPlayer() factory function ************************************************************
+        return {playersName, playersMarker};
+    }
 
 
 
-    //These are the player objects themselves*****************************************************************************
+    //These are the player objects 
     const playerXobj = createPlayer("Player X");
     playerXobj.playersMarker = "X";
-    playerXobj.defaultName = "Player X";
     const aiObj = createPlayer("AI");
     aiObj.playersMarker = "O";
-    aiObj.defaultName = "AI";
-    console.log(`PlayerO has a marker of: ${aiObj.playersMarker}`);
+    console.log(`AI has a marker of: ${aiObj.playersMarker}`);
     console.log(`Player X has a marker of: ${playerXobj.playersMarker}`);
-    //********************************************************************************************************************
+    
 
 
-
-
-    //This is the Gameboard module: all the UI stuff is in here for now
-    const gameBoard = (() => { //*****************************************************************************************
+    //This is the Gameboard module
+    const gameBoard = (() => { 
         let board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
-        function accessBoard() {//making the board data available without exposing board variable - for other code that needs to read but not change its data
+        function accessBoard() {
+            //making the board data available without exposing board variable - for other code that needs to read but not change its data
             return board;
         }
 
@@ -61,23 +52,19 @@
                 gridContainer.appendChild(jsDivs);
                 gridContainer.setAttribute('style', 'border-right: solid; border-bottom: solid; border-color: rgb(248, 246, 246); border-width: 0.5px;');
                 jsDivs.setAttribute('class', 'squares');
-                
             }
             for (let i = 0; i < numOfDivs; i++) {
-                //console.log(`created another grid div: ${i}`);
                 createDivs();
                 jsDivs.setAttribute('id', `${i}`);
-            }
-            
+            } 
         })
-       // boardGrid();
         return {accessBoard, updateBoardArray, emptyBoardArray, boardGrid};
-    })();//This is the end of the Gameboard module **************************************************************************
+    })();
 
    
 
    //This is the display module: it will control what is displayed in th UI 
-   const display = (() => {//*************************************************************************************************
+   const display = (() => {
     const createStartBtn = (text="START") => {
         const btnTxt = text;
         const startBtnWrapper = document.getElementById('gbGridContainer');
@@ -151,14 +138,12 @@
         const resultMsg = document.createElement('div');
         resultMsg.setAttribute('id', 'resultsMsg');
         resultMsgArea.appendChild(resultMsg);
-        //resultMsgArea.innerHTML = '';
         resultMsg.innerHTML = ` ${msgTxt}`;
     }
 
     const removeResultMsg = () => {
         const rmvResultMsg = document.getElementById('msgWrapper');
         rmvResultMsg.innerHTML = '';
-
     }
    
 
@@ -225,10 +210,10 @@
     //Return statement will go here
     return {writeMove, createStartBtn, showTurnMsg, removeTurnMsg, displayNotVacant, removeVacancyMsg, declareResultMsg, removeResultMsg, removeStartBtn, clearBoard};
     
-   })();//End of display module **********************************************************************************************
+   })();
 
 
-    //This is the Game module: it will control the flow of the game **********************************************************
+    //This is the Game module: it will control the flow of the game 
     const game = (() => {
         let gameResult = 'inPlay';// inPlay means still playing | win means win | tie means tie!
         let currentMarker = playerXobj.playersName; //hardcoded for now
@@ -257,18 +242,12 @@
             return randomSq;
         }
 
-  let whoseTurn = playerXobj.playersName;//Player x always goes first...
+        let whoseTurn = playerXobj.playersName;//Player x always goes first...
         const playGame = () => {
             //fires when start button is clicked...
-          
            gameBoard.boardGrid();
            display.removeStartBtn();
-           console.log(`Game has started: ${whoseTurn} take your turn`);//in practice, this will call the display module to write the message to screen
-           // display.showTurnMsg(whoseTurn);//call function to display take your turn message
-            setMove(whoseTurn);
-            //console.log(whoseTurn);
-
-            //whoseTurn is just for telling setMove who is going first...
+           setMove(whoseTurn);
         }
 
         const setMove = (turn) => {
@@ -290,18 +269,14 @@
                             console.log("Yay, it's free");
                             display.writeMove(`${marker}`, `${playerSelected}`);
                             display.removeTurnMsg();
-                            display.removeTurnMsg();
                            //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
                             gameBoard.updateBoardArray(playerSelected, marker);
-                            //TODO call function to check for win or tie: call it checkResult()
-                           // console.log(gameResult);
+                           //call function to check for win or tie
                             gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
                             console.log(gameResult);
                             if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
-                                //TODO write and call a function: endGame()
                                 endGame(gameResult);
                                 setTimeout(function() {
-                                    
                                     display.createStartBtn('REPLAY');
                                     display.removeResultMsg();
                                 }, 4400);
@@ -312,44 +287,43 @@
                                 //save return value of togglePlayer to currentPlayer
                                 currentPlayer = togglePlayer(currentPlayer);
                                 console.log(`was the return value passed ok: ${currentPlayer}`);
-                                display.showTurnMsg(currentPlayer);//call function to display take your turn message
+                                //display.showTurnMsg(currentPlayer);//call function to display take your turn message
                                 marker = updateMarker(currentPlayer);
                                let aiChecked;
+                               display.showTurnMsg(currentPlayer);//call function to display take your turn message
                                 if (currentPlayer === "AI") {
-                                    console.log("AI should take its turn now");
-                                    let aiChoice = aiSelection();
-                                    console.log(`AI chose square: ${aiChoice}`);
-                                   //need to check if square is free and if not, choose again
-                                  // const boardCheck = gameBoard.accessBoard();
-                                  // console.log(`this is what boardCheck[aiChoice] hold: ${boardCheck[aiChoice]}`);
-                                  aiChecked = checkVacant(aiChoice);
-                                  console.log(`aiChecked holds: ${aiChecked}`);
-                                   while (aiChecked === false) {
-                                        console.log('the first if condition for checking ai move said the square is occupied ');
-                                        aiChoice = aiSelection();
-                                        aiChecked = checkVacant(aiChoice);
-                                       
-
-                                        
-                                   } 
-                                    console.log(`square no. ${aiChoice} is free to make the move`);
+                                    console.log("AI should wait 1.0 secs and then take its turn");
                                     setTimeout(function() {
-                                        display.writeMove("O", aiChoice);
-                                    }, 1500);
-                                    gameBoard.updateBoardArray(aiChoice, "O");
-                                    display.removeTurnMsg();
-                                    currentPlayer = togglePlayer(currentPlayer);
-                                    marker = updateMarker(currentPlayer);
-                                   
-                                   
-                                   
+                                        let aiChoice = aiSelection(); 
+                                        console.log(`AI chose square: ${aiChoice}`);
+                                        //need to check if square is free and if not, choose again
+                                        aiChecked = checkVacant(aiChoice);
+                                        console.log(`aiChecked holds: ${aiChecked}`);
+                                        while (aiChecked === false) {
+                                                console.log('the first if condition for checking ai move said the square is occupied ');
+                                                aiChoice = aiSelection();
+                                                aiChecked = checkVacant(aiChoice);  
+                                        } 
+                                            console.log(`square no. ${aiChoice} is free to make the move`);
+                                            setTimeout(function() {
+                                                display.writeMove("O", aiChoice);
+                                            }, 1000);
+                                            gameBoard.updateBoardArray(aiChoice, "O");
+                                            display.removeTurnMsg();
+                                            currentPlayer = togglePlayer(currentPlayer);
+                                            marker = updateMarker(currentPlayer);
+                                            setTimeout(function() {
+                                                display.showTurnMsg(currentPlayer); 
+                                            }, 1000);
+                                            
+                                    }, 1000);
+                                      
                                 }
                                 
                             }
     
                         } else {
                             console.log("Nope, not free");
-                            //TODO:write and call a function display.writeNotVacantMsg
                             display.displayNotVacant();
                         }
                        
@@ -412,28 +386,17 @@
             } else if (boardResult.includes(" ")===false) {
                 console.log('The game is a TIE!!!***************************************************************************');
                 return 'tie';
-            }
-
-
-            
-            
+            }  
         }
 
         const endGame = (result) => {
             const results = result;
             console.log('GAME OVER');
             console.log(`gameResult passed: ${results}`);
-            display.declareResultMsg(results);//deliver result message usning functions in display module declareResultMsg()
-            //gameBoard.board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
+            display.declareResultMsg(results);
             gameBoard.emptyBoardArray();
             console.log(gameBoard.accessBoard());
-            //TODO call function to remove markers from UI
             display.clearBoard();//TODO still need to disable board until restart though
-            
-            //TODO reset all initial game variables
-            //TODO call to clear the board and gameover message
-            //TODO call to display start btn again
-            
         }
 
         const togglePlayer = (name) => {
@@ -465,11 +428,10 @@
             return nextMarker;
         }
 
-        //setMove();
 
         function checkVacant(sq) {
             let isVacant;
-            //1. Access board array via gameBoard module's exposed accessBoard() 
+            //Access board array via gameBoard module's exposed accessBoard() 
             let boardContents = gameBoard.accessBoard();
             console.log(`boardContents successfully grabbed?...${boardContents}`);
             if (boardContents[sq] == " ") {
@@ -483,7 +445,7 @@
 
 
         return {playGame};
-    })();//This is the end of the Game module *******************************************************************************
+    })();
 
 
-}()) ;//This is the end of the enclosing anonyomus closure -----------------END------------------------------------------------------------
+}());
