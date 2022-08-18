@@ -310,11 +310,23 @@
                                             }, 1000);
                                             gameBoard.updateBoardArray(aiChoice, "O");
                                             display.removeTurnMsg();
-                                            currentPlayer = togglePlayer(currentPlayer);
+                                            
+                                            gameResult = checkResult();//value is returned from checkResult to this variable. Either 'oWin' 'xWin' or 'tie'
+                                            console.log(gameResult);
+                                            if (gameResult === 'xWon' || gameResult === 'oWon' || gameResult === 'tie') {
+                                                endGame(gameResult);
+                                                setTimeout(function() {
+                                                    display.createStartBtn('REPLAY');
+                                                    display.removeResultMsg();
+                                                }, 4400);
+                                                
+                                            } else {
+                                                currentPlayer = togglePlayer(currentPlayer);
                                             marker = updateMarker(currentPlayer);
                                             setTimeout(function() {
                                                 display.showTurnMsg(currentPlayer); 
                                             }, 1000);
+                                            }
                                             
                                     }, 1000);
                                       
