@@ -79,6 +79,8 @@
         });
 
     }
+
+
     createStartBtn('START');
 
     const removeStartBtn = () => {
@@ -268,6 +270,10 @@
                         if (checked) {
                             console.log("Yay, it's free");
                             display.writeMove(`${marker}`, `${playerSelected}`);
+                            positions.forEach((position) => {
+                                 position.setAttribute('style', 'pointer-events: none;');//disables click after user's turn so erroneous input cannot be made
+                            });
+                           
                             display.removeTurnMsg();
                            //Pass playerSelected variable as the positionTaken arg,and marker variable as the markerPlaced arg...
                             gameBoard.updateBoardArray(playerSelected, marker);
@@ -324,6 +330,9 @@
                                                 currentPlayer = togglePlayer(currentPlayer);
                                             marker = updateMarker(currentPlayer);
                                             setTimeout(function() {
+                                                positions.forEach((position) => {
+                                                    position.setAttribute('style', 'pointer-events: auto;');//disables click after user's turn so erroneous input cannot be made
+                                               });
                                                 display.showTurnMsg(currentPlayer); 
                                             }, 1000);
                                             }
